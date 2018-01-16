@@ -11,7 +11,7 @@ from selenium.common.exceptions import NoAlertPresentException
 
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 
-from vars_setting import USERNAME, PASSWORD, BASE_URL, INVALID_VALUES
+from vars_setting import WAITSEC
 
 def show_log(func):
 
@@ -23,19 +23,22 @@ def show_log(func):
 		logging.debug('Thi setion %s is complete'%(func.__name__))
 		return res
 	return wrapper
-						 
 
 class BrowerDriver(object):
 	"""docstring for NewWebDriver"""
 	def __init__(self, driver_type='Chrome', msg='', status = True, \
-		host='localhost', port=5555, remote=False):
+		host='localhost', port=5555, is_remote=False, username='', \
+		password='', url=''):
 
 		self.msg = msg
 		self.status = status
 		self.driver_type = driver_type
 		self.host = host
 		self.port = port
-		self.remote = remote
+		self.remote = is_remote
+		self.username = username
+		self.password = password
+		self.url = url
 
 	def __enter__(self):
 		if not self.remote:
@@ -87,31 +90,31 @@ class BrowerDriver(object):
 		self.driver.quit()
 
 	@show_log
-	def logon_check(self, value, user=USERNAME, password=PASSWORD, url=BASE_URL):
+	def logon_check(self, value):
 
 		try:
-			self.driver.get(url)
-			WebDriverWait(self.driver, 10).until(lambda x: x.find_element_by_xpath("//input[@id='CAMUsername']"))
+			self.driver.get(self.url)
+			WebDriverWait(self.driver, WAITSEC).until(lambda x: x.find_element_by_xpath("//input[@id='CAMUsername']"))
 		except Exception as e:
 			logging.error('Logon failed %s' %e)
 			raise
 		else:
 			self.driver.find_element_by_xpath("//input[@id='CAMUsername']").clear()
-			self.driver.find_element_by_xpath("//input[@id='CAMUsername']").send_keys(user)
+			self.driver.find_element_by_xpath("//input[@id='CAMUsername']").send_keys(self.username)
 			self.driver.find_element_by_xpath("//input[@id='CAMPassword']").clear()
-			self.driver.find_element_by_xpath("//input[@id='CAMPassword']").send_keys(password)
+			self.driver.find_element_by_xpath("//input[@id='CAMPassword']").send_keys(self.password)
 			self.driver.find_element_by_xpath("//input[@id='cmdOK']").click()
 
 	@show_log
 	def sel_rpt_lvl(self, value):
 
-		WebDriverWait(self.driver, 15).until(lambda x: x.find_element_by_xpath("//option[@dv='"+value+"']"))
+		WebDriverWait(self.driver, WAITSEC).until(lambda x: x.find_element_by_xpath("//option[@dv='"+value+"']"))
 		self.driver.find_element_by_xpath("//option[@dv='"+value+"']").click()
 
 	@show_log
 	def sel_cty_comp(self, value):
 
-		WebDriverWait(self.driver, 15).until(lambda x: x.find_element_by_xpath("//option[@dv='"+value+"']"))
+		WebDriverWait(self.driver, WAITSEC).until(lambda x: x.find_element_by_xpath("//option[@dv='"+value+"']"))
 		self.driver.find_element_by_xpath("//option[@dv='"+value+"']").click()
 
 	@show_log
@@ -144,7 +147,7 @@ class BrowerDriver(object):
 		if value == 'Account':
 			value = 'Account '
 
-		WebDriverWait(self.driver,10).until(lambda x:x.find_element_by_xpath("//input[@dv='"+value+"']"))
+		WebDriverWait(self.driver,WAITSEC).until(lambda x:x.find_element_by_xpath("//input[@dv='"+value+"']"))
 		self.driver.find_element_by_xpath("//input[@dv='"+value+"']").click()
 
 	@show_log
@@ -169,7 +172,7 @@ class BrowerDriver(object):
 
 	def export_report(self, value):
 
-		WebDriverWait(self.driver, 15).until(lambda x:x.find_element_by_xpath\
+		WebDriverWait(self.driver, WAITSEC).until(lambda x:x.find_element_by_xpath\
 			("//span[@lid='HLExportReportResult_NS_']"))
 		
 		#get current windows handle id
@@ -187,4 +190,4 @@ class BrowerDriver(object):
 				self.driver.switch_to_window(handle)
 				WebDriverWait(self.driver, 30).until(lambda x:x.find_element_by_xpath("//td[@class='headerTitle']"))
 				logging.debug('waiting for download file...')
-				time.sleep(10)
+				time.sleep(WAITSEC)

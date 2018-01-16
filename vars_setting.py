@@ -1,7 +1,12 @@
+HOSTNAME = '9.112.57.52'
+PORT = 4444
 PARMFILE_NAME = 'dlr.xlsx'
 DEF_SHEET_NAME = 'request'
-USERNAME = 'yourusername'
-PASSWORD = 'yourpassword'
+WAITSEC = 30
+IS_REMOTE = True
+USERNAME = ''
+PASSWORD = ''
+IS_USER_NEEDED = True
 
 INVALID_VALUES = ['n/a','none,','na', '']
 

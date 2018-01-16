@@ -44,15 +44,15 @@ class RequestsLoader(object):
 		return records
 
 	def get_requests(self):
-		records_dict = []
+		records_list = []
 		title_value = [col.value for col in self.sheet[1]]
 
 		logging.debug('The maxrow of parameter file is %s' %self.sheet.max_row )
 		
 		for row in range(2, self.sheet.max_row+1):
 			row_value = [ col.value for col in self.sheet[row]]
-			records_dict.append(dict(zip(title_value, row_value)))
-		return records_dict
+			records_list.append(dict(zip(title_value, row_value)))
+		return records_list
 
 	def get_functions(self, request):
 		if not isinstance(request, Mapping):
@@ -60,6 +60,7 @@ class RequestsLoader(object):
 			raise AttributionError('the request type should be dict')
 
 		request_func = {'logon_check':''}
+		
 		for key, val in request.items():
 			if str(val).lower().strip() not in INVALID_VALUES and val is not None:
 				request_func[function_mapping[key]] = val 
