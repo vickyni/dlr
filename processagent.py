@@ -1,12 +1,14 @@
 
-from var_settings import INVALID_VALUES
+from vars_setting import INVALID_VALUES
+from function_mapping import function_mapping
+from collections import Mapping
 
 class ProcessAgent(object):
 	"""docstring for ProcessRequest"""
 	def __init__(self):
 		pass
 		
-	def process_request(driver, function, value=''):
+	def process_request(self, driver, function, value=''):
 		try:
 			getattr(driver, function)(value)
 		except Exception as e:
@@ -16,6 +18,8 @@ class ProcessAgent(object):
 		if not isinstance(request, Mapping):
 			logging.error('the request type should be dict')
 			raise AttributionError('the request type should be dict')
+
+		functions = {}
 
 		functions['logon_check'] = ''
 		

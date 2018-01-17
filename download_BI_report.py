@@ -13,7 +13,6 @@ from vars_setting import PARMFILE_NAME, DEF_SHEET_NAME, \
 						 IS_REMOTE, IS_USER_NEEDED, \
 						 HOSTNAME, PORT
 
-
 HOSTNAME = '9.112.57.52'
 PORT = 4444
 
