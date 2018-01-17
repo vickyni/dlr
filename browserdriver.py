@@ -24,7 +24,7 @@ def show_log(func):
 		return res
 	return wrapper
 
-class BrowerDriver(object):
+class BrowserDriver(object):
 	"""docstring for NewWebDriver"""
 	def __init__(self, driver_type='Chrome', msg='', status = True, \
 		host='localhost', port=5555, is_remote=False, username='', \

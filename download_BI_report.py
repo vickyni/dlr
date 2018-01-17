@@ -3,10 +3,9 @@
 import logging, os
 import time
 
-from getpass import getpass
-
-from browerdriver import BrowerDriver
+from browserdriver import BrowserDriver
 from requestsloader import RequestsLoader
+from processagent import ProcessAgent
 
 # Global Vars
 from vars_setting import PARMFILE_NAME, DEF_SHEET_NAME, \
@@ -14,8 +13,6 @@ from vars_setting import PARMFILE_NAME, DEF_SHEET_NAME, \
 						 IS_REMOTE, IS_USER_NEEDED, \
 						 HOSTNAME, PORT
 
-if USERNAME == '' and IS_USER_NEEDED:
-	from user_setting import USERNAME, PASSWORD
 
 HOSTNAME = '9.112.57.52'
 PORT = 4444
@@ -27,11 +24,6 @@ logging.basicConfig(level=logging.DEBUG,
                     filemode='w'
 	)
 
-def process_request(driver, function, value=''):
-	try:
-		getattr(driver, function)(value)
-	except Exception as e:
-		raise
 
 def download_report(parameter_file=PARMFILE_NAME, host=HOSTNAME, port=PORT, is_remote=IS_REMOTE, \
 					username=USERNAME, password=PASSWORD, url=BASE_URL):
@@ -51,19 +43,22 @@ def download_report(parameter_file=PARMFILE_NAME, host=HOSTNAME, port=PORT, is_r
 	logging.debug('get request reocrds')
 	requests = loadrequest.get_requests()
 
+	#init process agent object
+	process_agent = ProcessAgent()
+
 	# for each of request in the parameter file:
 	for request in requests:
 		# generate the selenium functions for the request, the funcion
 		# is to be executed in selenium server
-		request_functions = loadrequest.get_functions(request)
+		request_functions = process_agent.makeup_functions(request)
 
 		# 
-		with BrowerDriver(host=host, port=port, is_remote=is_remote, \
+		with BrowserDriver(host=host, port=port, is_remote=is_remote, \
 					username=username, password=password, url=url) as driver:
 
 			for func, value in request_functions.items():
 				try:
-					process_request(driver, func, value)
+					process_agent.process_request(driver, func, value)
 				except Exception as e:
 					raise
 

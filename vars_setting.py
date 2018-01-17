@@ -4,9 +4,11 @@ PARMFILE_NAME = 'dlr.xlsx'
 DEF_SHEET_NAME = 'request'
 WAITSEC = 30
 IS_REMOTE = True
-USERNAME = ''
-PASSWORD = ''
 IS_USER_NEEDED = True
+
+import os
+USERNAME = os.environ.get('USER_ID')
+PASSWORD = os.environ.get('USER_PASSWORD')
 
 INVALID_VALUES = ['n/a','none,','na', '']
 

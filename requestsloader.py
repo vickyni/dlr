@@ -20,7 +20,6 @@ def singleton(cls):
 
 # Class definition
 
-@singleton
 class RequestsLoader(object):
 	"""docstring for ParameterLoader
 	load the parameter file and retrun the list of request
@@ -53,18 +52,3 @@ class RequestsLoader(object):
 			row_value = [ col.value for col in self.sheet[row]]
 			records_list.append(dict(zip(title_value, row_value)))
 		return records_list
-
-	def get_functions(self, request):
-		if not isinstance(request, Mapping):
-			logging.error('the request type should be dict')
-			raise AttributionError('the request type should be dict')
-
-		request_func = {'logon_check':''}
-		
-		for key, val in request.items():
-			if str(val).lower().strip() not in INVALID_VALUES and val is not None:
-				request_func[function_mapping[key]] = val 
-
-		request_func['run_report'] = 5
-		request_func['export_report'] = ''
-		return request_func
