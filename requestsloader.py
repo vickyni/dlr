@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-import logging
+import logging, datetime
 
 from openpyxl import load_workbook
 
@@ -49,3 +49,28 @@ class RequestsLoader(object):
 			row_value = [ col.value for col in self.sheet[row]]
 			records_list.append(dict(zip(title_value, row_value)))
 		return records_list
+
+	def get_requests_str(self):
+		records_list = []
+		title_value = [col.value for col in self.sheet[1]]
+
+		logging.debug('The maxrow of parameter file is %s' %self.sheet.max_row )
+		
+		for row in range(2, self.sheet.max_row+1):
+			row_value = []
+			for col in self.sheet[row]:
+				if isinstance(col.value, datetime.datetime):
+					col.value = '-'.join([str(col.value.year), str(col.value.month), str(col.value.day)])
+				row_value.append(col.value)
+				
+			records_list.append(dict(zip(title_value, row_value)))
+		return records_list
+
+
+if __name__ == '__main__':
+	loadrequest = RequestsLoader(PARMFILE_NAME)
+	requests = loadrequest.get_requests_str()
+
+	for request in requests:
+		for key, value in request.items():
+			print('%s : %s, type is %s' %(key, value, type(value)))

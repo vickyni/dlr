@@ -44,6 +44,7 @@ def download_report(parameter_file=PARMFILE_NAME, host=HOSTNAME, port=PORT, is_r
 	# make up the dirctory in selenium server to store the report for user
 	# and return the dirctory name 
 	dir_name = mk_dir(username, host)
+	#dir_name = ''
 
 	# for each of request in the parameter file:
 	for request in requests:
