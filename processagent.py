@@ -9,9 +9,15 @@ class ProcessAgent(object):
 		pass
 		
 	def process_request(self, driver, function, value=''):
+		""" 
+		The function to process request via selenium server 
+		drvier is the object of browserdriver which has the function to manipulate 
+		action in selenium server 
+		"""
 		try:
 			getattr(driver, function)(value)
 		except Exception as e:
+			driver.save_image()
 			raise
 			
 	def makeup_functions(self, request):

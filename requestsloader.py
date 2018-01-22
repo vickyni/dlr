@@ -1,16 +1,13 @@
 # -*- coding: utf-8 -*-
 
-import logging, os
-import time
+import logging
 
-from collections import Mapping
 from openpyxl import load_workbook
 
-from function_mapping import function_mapping
-from vars_setting import PARMFILE_NAME, DEF_SHEET_NAME, INVALID_VALUES
+from vars_setting import PARMFILE_NAME, DEF_SHEET_NAME
 
 #singleton mode via decorator 
-def singleton(cls):
+def singleton(cls): 
 	_instance = {}
 	def _warper(*args, **kargs):
 		if cls not in _instance:

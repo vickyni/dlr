@@ -19,7 +19,7 @@ def show_log(func):
 	def wrapper(*arg, **kw):
 		logging.debug('The section %s is starting' %(func.__name__))
 		res = func(*arg, **kw)
-		time.sleep(0.5)
+		time.sleep(1)
 		logging.debug('Thi setion %s is complete'%(func.__name__))
 		return res
 	return wrapper
@@ -28,7 +28,7 @@ class BrowserDriver(object):
 	"""docstring for NewWebDriver"""
 	def __init__(self, driver_type='Chrome', msg='', status = True, \
 		host='localhost', port=5555, is_remote=False, username='', \
-		password='', url=''):
+		password='', url='', dirname=''):
 
 		self.msg = msg
 		self.status = status
@@ -39,6 +39,7 @@ class BrowserDriver(object):
 		self.username = username
 		self.password = password
 		self.url = url
+		self.dirname = dirname
 
 	def __enter__(self):
 		if not self.remote:
@@ -75,12 +76,12 @@ class BrowserDriver(object):
 				#self.options.add_argument('isable-gpu')
 				#self.options.add_argument('window-size=1200x600')
 				self.prefs = {'profile.default_content_settings.popups': 0, \
-				'download.default_directory': os.getcwd()}
+				'download.default_directory': self.dirname}
 				self.options.add_experimental_option('prefs', self.prefs)
 				try:
 					self.driver = webdriver.Remote(''.join(['http://',self.host,':',str(self.port),'/wd/hub']),  
-    						desired_capabilities=DesiredCapabilities.CHROME,
-   							#chrome_options=self.options
+    						#desired_capabilities=DesiredCapabilities.CHROME,
+   							desired_capabilities=self.options.to_capabilities()
    							)
 				except Exception as e:
 					raise
@@ -170,6 +171,12 @@ class BrowserDriver(object):
 	def run_report(self, value):
 		self.driver.find_element_by_xpath("//button[starts-with(@name,'finish')]").click()
 
+	@show_log
+	def save_image(self, filename=''):
+
+		self.driver.get_screenshot_as_file(self.dirname+'/error.png')
+
+	@show_log
 	def export_report(self, value):
 
 		WebDriverWait(self.driver, WAITSEC).until(lambda x:x.find_element_by_xpath\
