@@ -4,7 +4,7 @@ import logging, datetime
 
 from openpyxl import load_workbook
 
-from vars_setting import PARMFILE_NAME, DEF_SHEET_NAME
+from config import PARMFILE_NAME, DEF_SHEET_NAME
 
 #singleton mode via decorator 
 def singleton(cls): 

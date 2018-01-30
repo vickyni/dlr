@@ -1,7 +1,7 @@
 
-from vars_setting import INVALID_VALUES
-from function_mapping import function_mapping
 from collections import Mapping
+from config import function_mapping, INVALID_VALUES
+
 
 class ProcessAgent(object):
 	"""docstring for ProcessRequest"""

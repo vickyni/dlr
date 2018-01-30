@@ -11,7 +11,7 @@ from selenium.common.exceptions import NoAlertPresentException
 
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 
-from vars_setting import WAITSEC
+from config import WAITSEC
 
 def show_log(func):
 

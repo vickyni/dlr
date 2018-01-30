@@ -7,7 +7,7 @@ from processagent import ProcessAgent
 from utils.mk_dir import mk_dir
 
 # Global Vars
-from vars_setting import PARMFILE_NAME, DEF_SHEET_NAME, \
+from config import PARMFILE_NAME, DEF_SHEET_NAME, \
 						 USERNAME, PASSWORD, BASE_URL, \
 						 IS_REMOTE, IS_USER_NEEDED, \
 						 HOSTNAME, PORT
@@ -25,10 +25,11 @@ def download_report(parameter_file=PARMFILE_NAME, host=HOSTNAME, port=PORT, is_r
 	# init the request object from excel parameter file
 	try:
 		logging.debug('load parameter file')
-		loadrequest = RequestsLoader(parameter_file)
+		loadrequest = RequestsLoader()
+		loadrequest.load_workbook(parameter_file)
 	except FileNotFoundError as e:
 		logging.error(e)
-		raise
+		return False, 'The parameter file is not found'
 	except Exception as e:
 		logging.error(e)
 		raise
