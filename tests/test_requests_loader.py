@@ -5,17 +5,17 @@ sys.path.append(os.path.dirname(os.getcwd()))
 from requestsloader import RequestsLoader
 
 class TestRquestsLoader(unittest.TestCase):
-	"""docstring for TestRquestsLoader"""
+    """docstring for TestRquestsLoader"""
 
-	def setUp(self):
-		self.loader = RequestsLoader()
+    def setUp(self):
+        self.loader = RequestsLoader()
 
-	def test_not_exist_file(self):
-		with self.assertRaises(FileNotFoundError):
-			self.loader.load_workbook('not_exist_file')
+    def test_not_exist_file(self):
+        with self.assertRaises(FileNotFoundError):
+            self.loader.load_workbook('not_exist_file')
 
-	def tearDown(self):
-		pass
+    def tearDown(self):
+        pass
 
 if __name__ == '__main__':
-	unittest.main()
+    unittest.main()
