@@ -2,7 +2,7 @@
 from collections import Mapping
 from config import function_mapping, INVALID_VALUES
 
-from selenium.common.exceptions import TimeoutException
+from selenium.common.exceptions import TimeoutException, NoSuchElementException
 
 class ProcessAgent(object):
     """docstring for ProcessRequest"""
@@ -23,8 +23,13 @@ class ProcessAgent(object):
                 getattr(driver, function)(value)
             except TimeoutException as e:
                 retry_times -= 1
+            except NoSuchElementException as e:
+                logging.error('there is no such element for the user \
+                    criteria, please double check for function %s'\
+                    % function)
+                break
             except Exception as e:
-                driver.save_image()
+                #driver.save_image()
                 raise
             else:
                 is_retry = False

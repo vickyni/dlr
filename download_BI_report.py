@@ -6,7 +6,7 @@ from requestsloader import RequestsLoader
 from processagent import ProcessAgent
 from utils.commands import mk_dir, trigger_send_to_ftpserver
 
-from exceptions.exceptions import InvalidCredentials
+from exceptions.exceptions import InvalidCredentials, ReportCriteriaError
 
 # Global Vars
 from config import PARMFILE_NAME, DEF_SHEET_NAME, \
@@ -67,11 +67,17 @@ def download_report(parameter_file=PARMFILE_NAME, host=HOSTNAME, port=PORT, is_r
                 try:
                     process_agent.process_request(driver, func, value)
                 except InvalidCredentials as e:
-                    return False, 'The provided credentials are invalid. Please type your credentials for authentication.'
+                    return False, 'The provided credentials are invalid. \
+                        Please type your credentials for authentication.'
+                except ReportCriteriaError as e:
+                    return False, 'The report can not run successfully,\
+                        Please double check your input criteria!'
                 except Exception as e:
                     raise
     if is_remote:
         trigger_send_to_ftpserver(host)
+
+    return True, 'The report run successfully'
 
 if __name__ == '__main__':
     status, msg = download_report()

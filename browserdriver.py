@@ -17,7 +17,7 @@ from selenium.common.exceptions import TimeoutException
 
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 
-from exceptions.exceptions import InvalidCredentials
+from exceptions.exceptions import InvalidCredentials, ReportCriteriaError
 
 from config import WAITSEC
 
@@ -205,22 +205,23 @@ class BrowserDriver(object):
 
     @show_log
     def run_report(self, value):
-        self.driver.find_element_by_xpath("//button[starts-with(@name,'finish')]").click()
+        # if the export botton can not click, raise the exception 
+        try:
+            self.driver.find_element_by_xpath("//button[starts-with(@name,'finish')]").click()
+        except Exception as e:
+            logging.error('The report can not run successfully,\
+                please double check your input criteria!')
+            raise ReportCriteriaError
 
     @show_log
     def save_image(self, filename=''):
-
         self.driver.get_screenshot_as_file(self.dirname+'/error.png')
 
     @show_log
     def export_report(self, value):
 
-        # if the export botton can not click, raise the exception 
-        try:
-            WebDriverWait(self.driver, WAITSEC).until(lambda x:x.find_element_by_xpath\
-                ("//span[@lid='HLExportReportResult_NS_']"))
-        except Exception as e:
-            raise
+        WebDriverWait(self.driver, WAITSEC).until(lambda x:x.find_element_by_xpath\
+            ("//span[@lid='HLExportReportResult_NS_']"))
 
         #get current windows handle id
         nowhandle = self.driver.current_window_handle
