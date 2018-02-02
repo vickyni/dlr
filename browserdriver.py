@@ -3,7 +3,6 @@ The module is provide the function to simulate human actions
 for the ILC report download page in the remote selenium server
 """
 
-
 import logging, os
 import functools
 import time
@@ -14,8 +13,11 @@ from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.ui import Select, WebDriverWait
 from selenium.common.exceptions import NoSuchElementException
 from selenium.common.exceptions import NoAlertPresentException
+from selenium.common.exceptions import TimeoutException
 
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
+
+from exceptions.exceptions import InvalidCredentials
 
 from config import WAITSEC
 
@@ -29,6 +31,7 @@ def show_log(func):
         logging.debug('Thi setion %s is complete'%(func.__name__))
         return res
     return wrapper
+
 
 class BrowserDriver(object):
     """docstring for NewWebDriver"""
@@ -101,9 +104,8 @@ class BrowserDriver(object):
 
         try:
             self.driver.get(self.url)
-            WebDriverWait(self.driver, WAITSEC).until(lambda x: x.find_element_by_xpath("//input[@id='CAMUsername']"))
+            WebDriverWait(self.driver, 1).until(lambda x: x.find_element_by_xpath("//input[@id='CAMUsername']"))
         except Exception as e:
-            logging.error('Logon failed %s' %e)
             raise
         else:
             self.driver.find_element_by_xpath("//input[@id='CAMUsername']").clear()
@@ -111,6 +113,34 @@ class BrowserDriver(object):
             self.driver.find_element_by_xpath("//input[@id='CAMPassword']").clear()
             self.driver.find_element_by_xpath("//input[@id='CAMPassword']").send_keys(self.password)
             self.driver.find_element_by_xpath("//input[@id='cmdOK']").click()
+
+        retry_times = 30
+        while True and retry_times>0:
+            try:
+                WebDriverWait(self.driver, 1).until(lambda x:x.find_element_by_xpath\
+                    ("//button[starts-with(@name, 'cancel')]"))
+            except TimeoutException as e:
+                logging.debug('checking the logon status')
+            except Exception as e:
+                raise
+            else:
+                break
+
+            try:
+                WebDriverWait(self.driver, 1).until(lambda x:x.find_element_by_xpath\
+                    ("//*[contains(text(),\"invalid\") or contains(text(),\"RSV-CM-0005\")]"))
+            except TimeoutException as e:
+                logging.debug('checking the logon status')
+            except Exception as e:
+                raise
+            else:
+                logging.error('invalid id or password')
+                raise InvalidCredentials
+
+            retry_times -= 1
+
+            if retry_times == 0:
+                raise
 
     @show_log
     def sel_rpt_lvl(self, value):

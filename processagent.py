@@ -2,6 +2,7 @@
 from collections import Mapping
 from config import function_mapping, INVALID_VALUES
 
+from selenium.common.exceptions import TimeoutException
 
 class ProcessAgent(object):
     """docstring for ProcessRequest"""

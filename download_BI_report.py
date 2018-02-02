@@ -6,6 +6,8 @@ from requestsloader import RequestsLoader
 from processagent import ProcessAgent
 from utils.commands import mk_dir, trigger_send_to_ftpserver
 
+from exceptions.exceptions import InvalidCredentials
+
 # Global Vars
 from config import PARMFILE_NAME, DEF_SHEET_NAME, \
                          USERNAME, PASSWORD, BASE_URL, \
@@ -64,10 +66,13 @@ def download_report(parameter_file=PARMFILE_NAME, host=HOSTNAME, port=PORT, is_r
             for func, value in request_functions.items():
                 try:
                     process_agent.process_request(driver, func, value)
+                except InvalidCredentials as e:
+                    return False, 'The provided credentials are invalid. Please type your credentials for authentication.'
                 except Exception as e:
                     raise
     if is_remote:
         trigger_send_to_ftpserver(host)
 
 if __name__ == '__main__':
-    download_report()
+    status, msg = download_report()
+    print(status, msg)
