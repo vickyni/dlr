@@ -37,8 +37,11 @@ def download_report(parameter_file=PARMFILE_NAME, host=HOSTNAME, port=PORT, is_r
 
     # get the requests from the request objects, type is list
     # the single request is a dict
-    logging.debug('get request reocrds')
-    requests = loadrequest.get_requests()
+    try:
+        logging.debug('get request reocrds')
+        requests = loadrequest.get_requests()
+    except Exception as e:
+        raise
 
     #init process agent object
     process_agent = ProcessAgent()
@@ -46,7 +49,10 @@ def download_report(parameter_file=PARMFILE_NAME, host=HOSTNAME, port=PORT, is_r
     # make up the dirctory in selenium server to store the report for user
     # and return the dirctory name 
     if is_remote:
-        dir_name = mk_dir(username, host)
+        try:
+            dir_name = mk_dir(username, host)
+        except Exception as e:
+            raise
     else:
         dir_name = ''
 
@@ -75,8 +81,11 @@ def download_report(parameter_file=PARMFILE_NAME, host=HOSTNAME, port=PORT, is_r
                 except Exception as e:
                     raise
     if is_remote:
-        trigger_send_to_ftpserver(host)
-
+        try:
+            trigger_send_to_ftpserver(host)
+        except Exception as e:
+            raise
+            
     return True, 'The report run successfully'
 
 if __name__ == '__main__':
