@@ -17,17 +17,17 @@ class ProcessAgent(object):
         """
         
         is_retry = True
-        retry_times = 2
+        retry_times = 1
         while is_retry and retry_times>0:
             try:
                 getattr(driver, function)(value)
             except TimeoutException as e:
                 retry_times -= 1
-            except NoSuchElementException as e:
-                logging.error('there is no such element for the user \
-                    criteria, please double check for function %s'\
-                    % function)
-                break
+            # except NoSuchElementException as e:
+            #     logging.error('there is no such element for the user \
+            #         criteria, please double check for function %s'\
+            #         % function)
+            #     break
             except Exception as e:
                 #driver.save_image()
                 raise

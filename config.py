@@ -4,7 +4,8 @@ from collections import namedtuple
 
 HOSTNAME = '9.112.57.52'
 PORT = 4444
-PARMFILE_NAME = 'dlr.xlsx'
+#PARMFILE_NAME = 'dlr.xlsx'
+PARMFILE_NAME = 'parameter_template.xlsx'
 DEF_SHEET_NAME = 'request'
 WAITSEC = 15
 IS_REMOTE = True
@@ -32,6 +33,7 @@ function_mapping = {
 	'Select Report Format':'sel_rpt_format',
 	'Select Report Criteria':'sel_rpt_crit',
 	'Account / Employee':'sel_acc_emp',
+	'Input Field':'input_field',
 	'Enter Account ID':'enter_acc',
 	'Enter Department':'enter_dep',
 	'Enter Serial number ':'enter_sn',

@@ -91,7 +91,7 @@ class RequestsLoader(object):
 
 if __name__ == '__main__':
 	loadrequest = RequestsLoader()
-	loadrequest.load_workbook()
+	loadrequest.load_workbook('parameter_template.xlsx')
 	requests = loadrequest.get_requests_str()
 
 	for request in requests:

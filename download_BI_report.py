@@ -7,6 +7,7 @@ from processagent import ProcessAgent
 from utils.commands import mk_dir, trigger_send_to_ftpserver
 
 from exceptions.exceptions import InvalidCredentials, ReportCriteriaError
+from selenium.common.exceptions import NoSuchElementException
 
 # Global Vars
 from config import PARMFILE_NAME, DEF_SHEET_NAME, \
@@ -52,7 +53,8 @@ def download_report(parameter_file=PARMFILE_NAME, host=HOSTNAME, port=PORT, is_r
         try:
             dir_name = mk_dir(username, host)
         except Exception as e:
-            raise
+            logging.error('error occurred in the make dir %s' %e)
+            return False, 'Error occurred in the make dir'
     else:
         dir_name = ''
 
@@ -78,13 +80,17 @@ def download_report(parameter_file=PARMFILE_NAME, host=HOSTNAME, port=PORT, is_r
                 except ReportCriteriaError as e:
                     return False, 'The report can not run successfully,\
                         Please double check your input criteria!'
+                except NoSuchElementException as e:
+                    return False, 'The necessary field is invalid, please \
+                    check your input or your authentication'
                 except Exception as e:
                     raise
     if is_remote:
         try:
             trigger_send_to_ftpserver(host)
         except Exception as e:
-            raise
+            logging.error('error occurred in the send to ftpserver %s' %e)
+            return False, 'Error occurred in the send to ftpserver'
             
     return True, 'The report run successfully'
 

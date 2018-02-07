@@ -1,0 +1,12 @@
+#config文件通过host区分不同的托管库  
+#Default GitHub  
+Host github.com  
+HostName github.com  
+User git  
+IdentityFile ~/.ssh/id_rsa 
+  
+  
+Host github.ibm.com  
+HostName github.ibm.com  
+User git  
+IdentityFile ~/.ssh/id_rsa_ibm

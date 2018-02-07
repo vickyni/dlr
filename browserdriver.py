@@ -25,13 +25,12 @@ def show_log(func):
 
     @functools.wraps(func)
     def wrapper(*arg, **kw):
-        logging.debug('The section %s is starting' %(func.__name__))
+        logging.info('The section %s is starting' %(func.__name__))
         res = func(*arg, **kw)
         time.sleep(1)
-        logging.debug('Thi setion %s is complete'%(func.__name__))
+        logging.info('Thi setion %s is complete'%(func.__name__))
         return res
     return wrapper
-
 
 class BrowserDriver(object):
     """docstring for NewWebDriver"""
@@ -145,15 +144,27 @@ class BrowserDriver(object):
     @show_log
     def sel_rpt_lvl(self, value):
 
-        WebDriverWait(self.driver, WAITSEC).until(lambda x: x.find_element_by_xpath("//option[@dv='"+value+"']"))
-        self.driver.find_element_by_xpath("//option[@dv='"+value+"']").click()
-
+        try:  
+            WebDriverWait(self.driver, WAITSEC).until(lambda x: x.find_element_by_xpath("//option[@dv='"+value+"']"))
+        except TimeoutException as e:
+            raise NoSuchElementException
+        except Exception as e:
+            raise
+        else:
+            self.driver.find_element_by_xpath("//option[@dv='"+value+"']").click()
+        
     @show_log
     def sel_cty_comp(self, value):
 
-        WebDriverWait(self.driver, WAITSEC).until(lambda x: x.find_element_by_xpath("//option[@dv='"+value+"']"))
-        self.driver.find_element_by_xpath("//option[@dv='"+value+"']").click()
-
+        try:
+            WebDriverWait(self.driver, WAITSEC).until(lambda x: x.find_element_by_xpath("//option[@dv='"+value+"']"))
+        except TimeoutException as e:
+            raise NoSuchElementException
+        except Exception as e:
+            raise
+        else:
+            self.driver.find_element_by_xpath("//option[@dv='"+value+"']").click()
+        
     @show_log
     def wk_date_start(self, value):
         start_date_value = '-'.join([str(value.year), str(value.month), str(value.day)])
@@ -186,22 +197,22 @@ class BrowserDriver(object):
 
         WebDriverWait(self.driver,WAITSEC).until(lambda x:x.find_element_by_xpath("//input[@dv='"+value+"']"))
         self.driver.find_element_by_xpath("//input[@dv='"+value+"']").click()
-
+        
     @show_log
+    def input_field(self, value):
+        self.driver.find_element_by_xpath("//input[@class='clsTextWidget pt']").send_keys(value)
+
     def enter_acc(self, value):
-        self.driver.find_element_by_xpath("//input[@class='clsTextWidget pt']").send_keys(value)
+        return self.input_field(value)
 
-    @show_log
     def enter_dep(self, value):
-        self.driver.find_element_by_xpath("//input[@class='clsTextWidget pt']").send_keys(value)
+        return self.input_field(value)
 
-    @show_log
     def enter_sn(self, value):
-        self.driver.find_element_by_xpath("//input[@class='clsTextWidget pt']").send_keys(value)
+        return self.input_field(value)
 
-    @show_log
     def enter_workitem(self, value):
-        self.driver.find_element_by_xpath("//input[@class='clsTextWidget pt']").send_keys(value)
+        return self.input_field(value)
 
     @show_log
     def run_report(self, value):

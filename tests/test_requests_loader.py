@@ -1,6 +1,7 @@
 import unittest
 import sys, os, time
-sys.path.append(os.path.dirname(os.getcwd()))
+sys.path.append(os.path.dirname(__file__))
+#sys.path.append(os.path.dirname(os.getcwd()))
 
 from requestsloader import RequestsLoader
 
@@ -18,4 +19,5 @@ class TestRquestsLoader(unittest.TestCase):
         pass
 
 if __name__ == '__main__':
+    print(sys.path)
     unittest.main()
