@@ -1,5 +1,5 @@
 
-from collections import Mapping
+from collections import Mapping, OrderedDict
 from config import function_mapping, INVALID_VALUES
 
 from selenium.common.exceptions import TimeoutException, NoSuchElementException
@@ -39,8 +39,8 @@ class ProcessAgent(object):
             logging.error('the request type should be dict')
             raise AttributionError('the request type should be dict')
 
-        functions = {}
-
+        functions = OrderedDict()
+        
         functions['logon_check'] = ''
         
         for key, val in request.items():

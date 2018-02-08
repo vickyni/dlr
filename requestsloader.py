@@ -1,10 +1,12 @@
 # -*- coding: utf-8 -*-
 
-import logging, datetime
-
+import logging, datetime, os, sys
+from collections import OrderedDict
 from openpyxl import load_workbook
 
 from config import PARMFILE_NAME, DEF_SHEET_NAME
+
+sys.path.append(os.path.dirname(__file__))
 
 #singleton mode via decorator 
 def singleton(cls): 
@@ -64,7 +66,7 @@ class RequestsLoader(object):
 		
 		for row in range(2, self.sheet.max_row+1):
 			row_value = [ col.value for col in self.sheet[row]]
-			records_list.append(dict(zip(title_value, row_value)))
+			records_list.append(OrderedDict(zip(title_value, row_value)))
 		return records_list
 
 	def get_requests_str(self):
@@ -85,7 +87,7 @@ class RequestsLoader(object):
 					col.value = '-'.join([str(col.value.year), str(col.value.month), str(col.value.day)])
 				row_value.append(col.value)
 				
-			records_list.append(dict(zip(title_value, row_value)))
+			records_list.append(OrderedDict(zip(title_value, row_value)))
 		return records_list
 
 
